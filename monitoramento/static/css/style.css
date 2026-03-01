@@ -1,0 +1,13 @@
+body {
+    font-family: 'Inter', sans-serif;
+    padding-top: 80px;
+    }
+
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    }
+
+p, li, a {
+    font-weight: 400;
+    }
