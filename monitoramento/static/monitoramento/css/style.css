@@ -1,0 +1,7 @@
+:root { --glass: rgba(255, 255, 255, 0.1); }
+body { background-color: #f4f7f6; transition: 0.3s; }
+[data-bs-theme="dark"] body { background-color: #121212; }
+.card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.status-critical { border-left: 8px solid #dc3545 !important; }
+.status-ok { border-left: 8px solid #198754 !important; }
+.gauge-container { position: relative; height: 200px; width: 200px; margin: auto; }

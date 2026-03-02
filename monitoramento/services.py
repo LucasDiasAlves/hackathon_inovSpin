@@ -5,7 +5,7 @@ def processar_manutencao_preditiva(dados_sensor):
     temp_ar_c = dados_sensor['temp_ar_k'] - 273.15
     temp_proc_c = dados_sensor['temp_processo_k'] - 273.15
     delta_temp = temp_proc_c - temp_ar_c
-
+    
     status_matematico = "Operação Normal"
     if delta_temp > 10:
         status_matematico = "Alerta: Dissipação Térmica Deficiente (Crítico)"
