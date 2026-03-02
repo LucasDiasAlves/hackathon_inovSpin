@@ -112,8 +112,6 @@
     <script src="{% static 'monitoramento/js/dashboard.js' %}"></script>
     
     <script>
-        // Corrigindo o erro de ponto/vírgula do Django para o JS
-        // O filtro |safe impede que o Django escape caracteres, e o replace garante o ponto decimal
         const valorRisco = "{{ analise.ia_risco_porcentagem|safe }}".replace(',', '.');
         initDashboard(valorRisco);
     </script>
