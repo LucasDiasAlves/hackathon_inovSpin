@@ -1,107 +1,105 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InovSpin | Dashboard de Manutenção</title>
+    <title>InovaSpin | Monitoramento Crítico</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
 </head>
-<body data-bs-theme="light">
+<body>
 
-    <nav class="navbar navbar-expand-lg border-bottom mb-4">
+    <nav class="navbar border-bottom py-3">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">⚡ InovSpin <span class="text-primary">Monitor</span></a>
-            <div class="d-flex">
-                <button class="btn btn-outline-secondary btn-sm" onclick="toggleTheme()">
-                    <i class="bi bi-brightness-high-fill" id="theme-icon"></i>
-                </button>
-            </div>
+            <span class="navbar-brand fw-bold">INOVASPIN <span class="fw-light">| INFRAESTRUTURA</span></span>
+            <button class="btn btn-link text-decoration-none" onclick="toggleTheme()">
+                <i class="bi bi-brightness-high-fill" id="theme-icon"></i>
+            </button>
         </div>
     </nav>
 
-    <div class="container">
-        <div class="row mb-4">
-            <div class="col-md-8">
-                <h2 class="fw-bold">Ativo: {{ registro.product_id }}</h2>
-                <p class="text-muted">Tipo: {{ registro.get_tipo_display }} | Última leitura: {{ registro.data_leitura|date:"H:i:s" }}</p>
+    <div class="container py-4">
+        <div class="row align-items-center mb-5">
+            <div class="col-md-7">
+                <h6 class="metric-label mb-1">Identificação do Ativo</h6>
+                <h1 class="display-5 fw-bold mb-0">{{ registro.product_id }}</h1>
+                <p class="mb-0 opacity-75">Tipo: {{ registro.get_tipo_display }} | Local: Data Center Granja do Torto</p>
             </div>
-            <div class="col-md-4 text-end">
+            <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                <h6 class="metric-label mb-2">Condição Atual</h6>
                 {% if analise.critico %}
-                    <span class="badge bg-danger p-3 fs-6 w-100"><i class="bi bi-exclamation-triangle"></i> MANUTENÇÃO IMEDIATA</span>
+                    <div class="badge bg-danger p-3 fs-5 rounded-pill"><i class="bi bi-shield-exclamation"></i> MANUTENÇÃO IMEDIATA</div>
                 {% else %}
-                    <span class="badge bg-success p-3 fs-6 w-100"><i class="bi bi-check-circle"></i> SISTEMA ESTÁVEL</span>
+                    <div class="badge bg-info p-3 fs-5 rounded-pill"><i class="bi bi-shield-check"></i> OPERAÇÃO ESTÁVEL</div>
                 {% endif %}
+                <p class="small mt-2 opacity-50">Última Leitura: {{ registro.data_leitura|date:"d/m/Y H:i" }}</p>
             </div>
         </div>
 
-        <div class="row g-3">
+        <div class="row g-4">
             <div class="col-md-3">
-                <div class="card p-3 h-100">
-                    <small class="text-muted fw-bold">TEMPERATURA PROCESSO</small>
-                    <h3 class="mb-0">{{ analise.temp_proc_c }} °C</h3>
-                    <div class="progress mt-2" style="height: 5px;">
-                        <div class="progress-bar bg-warning" style="width: 65%"></div>
-                    </div>
+                <div class="card p-3 border-stable">
+                    <div class="metric-label">Temp. Ambiente</div>
+                    <h3 class="fw-bold">{{ analise.temp_ar_c }}°C</h3>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3 h-100">
-                    <small class="text-muted fw-bold">TORQUE ATUAL</small>
-                    <h3 class="mb-0">{{ registro.torque_nm }} Nm</h3>
-                    <div class="progress mt-2" style="height: 5px;">
-                        <div class="progress-bar bg-primary" style="width: 45%"></div>
-                    </div>
+                <div class="card p-3 border-warning">
+                    <div class="metric-label">Temp. Processo</div>
+                    <h3 class="fw-bold">{{ analise.temp_proc_c }}°C</h3>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3 h-100">
-                    <small class="text-muted fw-bold">ROTAÇÃO</small>
-                    <h3 class="mb-0">{{ registro.rotacao_rpm }} <small class="fs-6 text-muted">RPM</small></h3>
+                <div class="card p-3 border-good">
+                    <div class="metric-label">Torque / Rotação</div>
+                    <h3 class="fw-bold">{{ registro.torque_nm }}<small class="fs-6 fw-light">Nm</small> | {{ registro.rotacao_rpm|floatformat:0 }}<small class="fs-6 fw-light">RPM</small></h3>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3 h-100">
-                    <small class="text-muted fw-bold">DIFERENCIAL TÉRMICO (ΔT)</small>
-                    <h3 class="mb-0 {% if analise.delta_temp > 10 %}text-danger{% endif %}">{{ analise.delta_temp }} K</h3>
+                <div class="card p-3 border-danger">
+                    <div class="metric-label">Diferencial Térmico (ΔT)</div>
+                    <h3 class="fw-bold">{{ analise.delta_temp }} K</h3>
                 </div>
             </div>
 
             <div class="col-md-4">
-                <div class="card p-4 text-center h-100">
-                    <h5 class="fw-bold mb-3">Risco Previsto (IA)</h5>
+                <div class="card p-4 h-100 text-center">
+                    <h6 class="metric-label mb-4">Análise Preditiva (IA)</h6>
                     <div class="gauge-container">
                         <canvas id="gaugeRisco"></canvas>
-                        <div style="position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%);">
-                            <h2 class="mb-0">{{ analise.ia_risco_porcentagem }}%</h2>
+                        <div class="position-absolute top-50 start-50 translate-middle mt-2">
+                            <h2 class="fw-bold mb-0">{{ analise.ia_risco_porcentagem }}%</h2>
+                            <small class="opacity-50">RISCO</small>
                         </div>
                     </div>
-                    <p class="mt-3 small text-muted">{{ analise.ia_mensagem }}</p>
+                    <p class="mt-4 fw-semibold">{{ analise.ia_mensagem }}</p>
                 </div>
             </div>
 
             <div class="col-md-8">
-                <div class="card p-4 h-100 {% if analise.critico %}status-critical{% else %}status-ok{% endif %}">
-                    <h5 class="fw-bold">Veredito da Análise Híbrida</h5>
-                    <div class="row mt-3">
-                        <div class="col-md-6 border-end">
-                            <h6 class="text-muted"><i class="bi bi-cpu"></i> IA FastAPI</h6>
-                            <p class="fw-bold">{% if analise.ia_falha_prevista %}Falha Iminente Detectada{% else %}Nenhum padrão de falha{% endif %}</p>
+                <div class="card p-4 h-100">
+                    <h6 class="metric-label mb-4">Análise Determinística (Matemática)</h6>
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-cpu fs-1 text-primary"></i>
                         </div>
-                        <div class="col-md-6 ps-4">
-                            <h6 class="text-muted"><i class="bi bi-rulers"></i> Matemática Django</h6>
-                            <p class="fw-bold">{{ analise.status_matematico }}</p>
+                        <div class="flex-grow-1 ms-3">
+                            <h4 class="fw-bold mb-1">{{ analise.status_matematico }}</h4>
+                            <p class="mb-0 opacity-75">Cálculo de potência e gradiente térmico em tempo real.</p>
                         </div>
                     </div>
-                    <div class="alert mt-3 mb-0 {% if analise.critico %}alert-light-danger{% else %}alert-light-success{% endif %} bg-opacity-10 border-0 p-3">
-                        <strong>Recomendação:</strong> 
-                        {% if analise.critico %}
-                            Interromper operação para inspeção térmica e mecânica imediata.
-                        {% else %}
-                            Manter plano de manutenção preventiva padrão.
-                        {% endif %}
+                    
+                    <div class="alert bg-secondary bg-opacity-10 border-0">
+                        <h6 class="fw-bold"><i class="bi bi-info-circle"></i> Diagnóstico do Sistema:</h6>
+                        <ul class="mb-0">
+                            {% for alerta in analise.alertas_matematicos %}
+                                <li>{{ alerta }}</li>
+                            {% empty %}
+                                <li>Parâmetros físicos dentro da normalidade operacional.</li>
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -109,8 +107,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{% static 'monitoramento/js/dashboard.js' %}"></script>
-    
+    <script src="{% static 'monitoramento/js/script.js' %}"></script>
     <script>
         const valorRisco = "{{ analise.ia_risco_porcentagem|safe }}".replace(',', '.');
         initDashboard(valorRisco);
