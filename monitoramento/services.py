@@ -19,13 +19,13 @@ def processar_manutencao_preditiva(dados_sensor):
     status_matematico = "Operação Normal"
     alertas_detalhados = []
 
-    if delta_t > 5:
+    if delta_t > 9:
         status_matematico = "Atenção: Gradiente Térmico Elevado"
-        alertas_detalhados.append("Diferencial térmico acima de 5K detectado.")
+        alertas_detalhados.append("Diferencial térmico acima de 9K detectado.")
         
     if rpm < 800 and delta_t > 4:
         status_matematico = "Crítico: Baixa Eficiência Térmica"
-        alertas_detalhados.append("Alta temperatura detectada para baixa rotação (Provável Atrito/Sobrecarga).")
+        alertas_detalhados.append("Alta temperatura detectada para baixa rotação.")
 
     if rpm < 600 and torque > 50:
         status_matematico = "Crítico: Risco de Travamento (Stall)"

@@ -16,12 +16,15 @@ class DadosSensor(BaseModel):
 
 @app.post("/predict")
 def predict(dados: DadosSensor):
+    delta_t = dados.temp_processo - dados.temp_ar
+    relacao = dados.rpm / (delta_t + 1)
     input_data = np.array([[
         dados.temp_ar, 
         dados.temp_processo, 
         dados.rpm, 
         dados.torque, 
-        dados.desgaste
+        dados.desgaste,
+        relacao
     ]])
     
     predicao = model.predict(input_data)[0]
