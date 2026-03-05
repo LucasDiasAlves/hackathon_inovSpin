@@ -25,22 +25,26 @@
             <div class="col-md-7">
                 <h6 class="metric-label mb-2">Identificação do Ativo</h6>
                 <div class="mb-4 search">
-                    <form method="GET" action="" class="input-group input-group-lg"> 
-                        <input type="text" name="filtro_id" 
-                        id="inputAtivo"
-                        list="lista-ativos" value="{{ registro.product_id }}" placeholder="{{registro.product_id}}" class="form-control bg-dark border-secondary text-white shadow-none">
-
-                        <datalist id="lista-ativos">
+                    <form method="GET" action="" class="input-group input-group-lg shadow-sm"> 
+                        <input type="text" 
+                            name="filtro_id" 
+                            id="inputAtivo"
+                            list="lista-ativos" 
+                            value="{{ registro.product_id }}" 
+                            placeholder="ID do Ativo..." 
+                            class="form-control shadow-none border-0"> <datalist id="lista-ativos">
                             {% for id in todos_ids %}
                             <option value="{{ id }}">
                             {% endfor %}
                         </datalist>
 
-                        <button class="btn btn-success px-4 btn-search" type="submit">
-                            <i class="bi bi-search"></i>    
+                        <button class="btn btn-success px-4 border-0" 
+                                type="submit" 
+                                style="background-color: #198754; width: 80px;">
+                            <i class="bi bi-search fs-4"></i>    
                         </button>
-    
                     </form>
+
                 </div>
                 <h1 class="display-5 fw-bold mb-0">{{ registro.product_id }}</h1>
                 <p class="mb-0 opacity-75">Tipo: {{ registro.get_tipo_display }}</p>
@@ -164,23 +168,28 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{% static 'monitoramento/js/script.js' %}"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        try {
-            const dadosGrafico = {
-                atual: parseFloat("{{ grafico_dados.atual|safe }}".replace(',', '.')),
-                media_cat: parseFloat("{{ grafico_dados.media_cat|safe }}".replace(',', '.')),
-                media_falha: parseFloat("{{ grafico_dados.media_falha|safe }}".replace(',', '.'))
-            };
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        // Usamos aspas e replace para garantir que 10,5 vire 10.5
+        const atualRaw = "{{ grafico_dados.atual|safe }}".replace(',', '.');
+        const mediaCatRaw = "{{ grafico_dados.media_cat|safe }}".replace(',', '.');
+        const mediaFalhaRaw = "{{ grafico_dados.media_falha|safe }}".replace(',', '.');
 
-            console.log("Dados Processados:", dadosGrafico); 
+        const dadosGrafico = {
+            atual: parseFloat(atualRaw) || 0,
+            media_cat: parseFloat(mediaCatRaw) || 0,
+            media_falha: parseFloat(mediaFalhaRaw) || 0
+        };
 
-            if (typeof initGraficoComparativo === "function") {
-                initGraficoComparativo(dadosGrafico);
-            }
-        } catch (e) {
-            console.error("Erro ao processar dados para o gráfico:", e);
+        console.log("Monitoramento InovaSpin - Dados do Gráfico:", dadosGrafico);
+
+        if (typeof initGraficoComparativo === "function") {
+            initGraficoComparativo(dadosGrafico);
         }
-    });
+    } catch (e) {
+        console.error("Erro Crítico no Gráfico:", e);
+    }
+});
 </script>
     <script>
         const valorRisco = "{{ analise.ia_risco_porcentagem|safe }}".replace(',', '.');
