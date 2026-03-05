@@ -23,9 +23,27 @@
     <div class="container py-4">
         <div class="row align-items-center mb-5">
             <div class="col-md-7">
-                <h6 class="metric-label mb-1">Identificação do Ativo</h6>
+                <h6 class="metric-label mb-2">Identificação do Ativo</h6>
+                <div class="mb-4 search">
+                    <form method="GET" action="" class="input-group input-group-lg"> 
+                        <input type="text" name="filtro_id" 
+                        id="inputAtivo"
+                        list="lista-ativos" value="{{ registro.product_id }}" placeholder="{{registro.product_id}}" class="form-control bg-dark border-secondary text-white shadow-none">
+
+                        <datalist id="lista-ativos">
+                            {% for id in todos_ids %}
+                            <option value="{{ id }}">
+                            {% endfor %}
+                        </datalist>
+
+                        <button class="btn btn-success px-4 btn-search" type="submit">
+                            <i class="bi bi-search"></i>    
+                        </button>
+    
+                    </form>
+                </div>
                 <h1 class="display-5 fw-bold mb-0">{{ registro.product_id }}</h1>
-                <p class="mb-0 opacity-75">Tipo: {{ registro.get_tipo_display }} | Local: Data Center Granja do Torto</p>
+                <p class="mb-0 opacity-75">Tipo: {{ registro.get_tipo_display }}</p>
             </div>
             <div class="col-md-5 text-md-end mt-3 mt-md-0">
                 <h6 class="metric-label mb-2">Condição Atual</h6>

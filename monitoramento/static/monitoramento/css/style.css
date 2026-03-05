@@ -56,3 +56,12 @@ body {
     max-width: 250px;
     margin: auto;
 }
+.search{
+    max-width: 350px;
+}
+
+.btn-search{
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+}

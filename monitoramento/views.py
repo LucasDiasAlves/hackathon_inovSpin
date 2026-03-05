@@ -4,10 +4,18 @@ from .models import AtivoEletrico
 from .services import processar_manutencao_preditiva
 
 def monitoramento(request):
-    registro = AtivoEletrico.objects.filter(product_id="M14860").first()
+    todos_ids = AtivoEletrico.objects.values_list('product_id', flat=True).distinct()
+    
+    id_buscado = request.GET.get('filtro_id', 'M14860').strip()
+    
+    registro = AtivoEletrico.objects.filter(product_id=id_buscado).first()
     
     if not registro:
-        return render(request, 'dashboard.html', {'erro': 'Registro M14860 não encontrado.'})
+        registro = AtivoEletrico.objects.first()
+        erro_msg = f"Ativo {id.buscado} não encontrado. Mostrando padrão."
+    else:
+        erro_msg = None
+
 
     dados_sensor = {
         'temp_ar_k': registro.temp_ar_k,
@@ -25,7 +33,9 @@ def monitoramento(request):
     
     contexto = {
         'registro': registro,
-        'analise': analise
+        'analise': analise,
+        'erro_busca': erro_msg,
+        'todos_ids': todos_ids,
     }
     return render(request, 'monitoramento/index.html', contexto)
     
