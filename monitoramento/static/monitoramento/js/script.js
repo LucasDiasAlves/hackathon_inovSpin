@@ -43,3 +43,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-bs-theme', savedTheme);
 });
+
+function initGraficoComparativo(dados) {
+    const ctx = document.getElementById('canvasGraficoComparativo').getContext('2d');
+    
+    let corDinamica = '#0ea5e9';
+    if (dados.atual >= dados.media_falha) corDinamica = '#ef4444';
+    else if (dados.atual > dados.media_cat) corDinamica = '#f59e0b';
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Ativo Atual', 'Média Real (Base)', 'Ponto Crítico (Histórico)'],
+            datasets: [{
+                data: [dados.atual, dados.media_cat, dados.media_falha],
+                backgroundColor: [corDinamica, '#22c55e', '#64748b'],
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } }
+        }
+    });
+}

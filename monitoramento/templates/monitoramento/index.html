@@ -129,14 +129,46 @@
                     </div>
                 </div>
             </div>
+            <div class="card p-4 mt-4 shadow-sm">
+    <h6 class="metric-label mb-4 text-primary">Análise Comparativa de Estresse (ΔT)</h6>
+    <div style="height: 300px;">
+        <canvas id="canvasGraficoComparativo"></canvas>
+    </div>
+    <p class="small opacity-75 mt-3">
+        <i class="bi bi-info-circle"></i> 
+        Este gráfico compara o diferencial térmico atual com o comportamento histórico da categoria <strong>{{ registro.get_tipo_display }}</strong>.
+    </p>
+</div>
         </div>
     </div>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{% static 'monitoramento/js/script.js' %}"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            // Passamos como string e corrigimos a vírgula via JS
+            const dadosGrafico = {
+                atual: parseFloat("{{ grafico_dados.atual|safe }}".replace(',', '.')),
+                media_cat: parseFloat("{{ grafico_dados.media_cat|safe }}".replace(',', '.')),
+                media_falha: parseFloat("{{ grafico_dados.media_falha|safe }}".replace(',', '.'))
+            };
+
+            console.log("Dados Processados:", dadosGrafico); // Para você conferir no F12
+
+            if (typeof initGraficoComparativo === "function") {
+                initGraficoComparativo(dadosGrafico);
+            }
+        } catch (e) {
+            console.error("Erro ao processar dados para o gráfico:", e);
+        }
+    });
+</script>
     <script>
         const valorRisco = "{{ analise.ia_risco_porcentagem|safe }}".replace(',', '.');
         initDashboard(valorRisco);
     </script>
+
+    
 </body>
 </html>
