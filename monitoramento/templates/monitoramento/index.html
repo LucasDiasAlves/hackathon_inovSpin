@@ -47,10 +47,18 @@
             </div>
             <div class="col-md-5 text-md-end mt-3 mt-md-0">
                 <h6 class="metric-label mb-2">Condição Atual</h6>
-                {% if analise.critico %}
-                    <div class="badge bg-danger p-3 fs-5 rounded-pill"><i class="bi bi-shield-exclamation"></i> MANUTENÇÃO IMEDIATA</div>
+                {% if alerta_amarelo %}
+                    <div class="badge bg-warning text-dark p-3 fs-5 rounded-pill">
+                        <i class="bi bi-exclamation-triangle"></i> VERIFICAÇÃO RECOMENDADA
+                    </div>
+                {% elif analise.critico %}
+                    <div class="badge bg-danger p-3 fs-5 rounded-pill">
+                        <i class="bi bi-shield-exclamation"></i> MANUTENÇÃO IMEDIATA
+                    </div>
                 {% else %}
-                    <div class="badge bg-info p-3 fs-5 rounded-pill"><i class="bi bi-shield-check"></i> OPERAÇÃO ESTÁVEL</div>
+                    <div class="badge bg-info p-3 fs-5 rounded-pill">
+                        <i class="bi bi-shield-check"></i> OPERAÇÃO ESTÁVEL
+                    </div>
                 {% endif %}
                 <p class="small mt-2 opacity-50">Última Leitura: {{ registro.data_leitura|date:"d/m/Y H:i" }}</p>
             </div>

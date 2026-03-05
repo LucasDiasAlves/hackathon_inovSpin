@@ -20,8 +20,8 @@ def processar_manutencao_preditiva(dados_sensor):
     alertas_detalhados = []
 
     if delta_t > 9:
-        status_matematico = "Atenção: Gradiente Térmico Elevado"
-        alertas_detalhados.append("Diferencial térmico acima de 9K detectado.")
+        status_matematico = "Alerta: Estresse Térmico Detectado"
+        alertas_detalhados.append(f"Gradiente de {delta_t}K acima do limite nominal (9K).")
         
     if rpm < 800 and delta_t > 4:
         status_matematico = "Crítico: Baixa Eficiência Térmica"

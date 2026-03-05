@@ -31,11 +31,14 @@ def monitoramento(request):
     registro.predicao_ia_risco = analise['ia_risco_porcentagem']
     registro.save()
     
+    exibir_alerta_amarelo = ("Alerta" in analise['status_matematico'] or "Atenção" in analise['status_matematico']) and analise['ia_risco_porcentagem'] < 20    
+    
     contexto = {
         'registro': registro,
         'analise': analise,
         'erro_busca': erro_msg,
         'todos_ids': todos_ids,
+        'alerta_amarelo': exibir_alerta_amarelo,
     }
     return render(request, 'monitoramento/index.html', contexto)
     
