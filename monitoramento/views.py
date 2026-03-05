@@ -48,12 +48,32 @@ def monitoramento(request):
         'media_falha': float(media_falha_db)
         }
     
+    ia_risco = analise.get('ia_risco_porcentagem', 0)
+    ia_mensagem = analise.get('ia_mensagem', "Sistema Estável")
+    status_mat = analise.get('status_matematico', "Operação Normal")
+
+# 2. Lógica de Hierarquia de Alerta (O mais grave vence)
+    if ia_risco > 80:
+        analise['critico'] = True
+    # Forçamos a mensagem da IA a aparecer com destaque
+        status_exibicao = f"CRÍTICO: {ia_mensagem}"
+        cor_alerta = "danger" 
+    elif ia_risco > 40 or "Alerta" in status_mat:
+        analise['critico'] = False # Não é crítico total ainda
+        status_exibicao = "ATENÇÃO: " + (ia_mensagem if ia_risco > 40 else status_mat)
+        cor_alerta = "warning"
+    else:
+        status_exibicao = "ESTÁVEL: Operação Nominal"
+        cor_alerta = "info"
+    
     contexto = {
         'registro': registro,
         'analise': analise,
         'todos_ids': todos_ids,
         'alerta_amarelo': ("Alerta" in analise['status_matematico']) and analise['ia_risco_porcentagem'] < 20,
         'grafico_dados': grafico_dados,
+        'status_personalizado': status_exibicao,
+        'cor_alerta': cor_alerta,
         }
     
     return render(request, 'monitoramento/index.html', contexto)

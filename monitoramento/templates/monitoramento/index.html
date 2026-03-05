@@ -105,29 +105,48 @@
             </div>
 
             <div class="col-md-8">
-                <div class="card p-4 h-100">
-                    <h6 class="metric-label mb-4">Análise Determinística (Matemática)</h6>
-                    <div class="d-flex align-items-center mb-4">
-                        <div class="flex-shrink-0">
-                            <i class="bi bi-cpu fs-1 text-primary"></i>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h4 class="fw-bold mb-1">{{ analise.status_matematico }}</h4>
-                            <p class="mb-0 opacity-75">Cálculo de potência e gradiente térmico em tempo real.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="alert bg-secondary bg-opacity-10 border-0">
-                        <h6 class="fw-bold"><i class="bi bi-info-circle"></i> Diagnóstico do Sistema:</h6>
-                        <ul class="mb-0">
-                            {% for alerta in analise.alertas_matematicos %}
-                                <li>{{ alerta }}</li>
-                            {% empty %}
-                                <li>Parâmetros físicos dentro da normalidade operacional.</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
+                <div class="card p-4 h-100 shadow-sm border-0">
+    <h6 class="metric-label mb-4 text-primary">Diagnóstico Híbrido (Física + IA)</h6>
+    
+    <div class="d-flex align-items-center mb-3">
+        <div class="flex-shrink-0">
+            <i class="bi bi-cpu fs-2 text-primary"></i>
+        </div>
+        <div class="flex-grow-1 ms-3">
+            <h5 class="fw-bold mb-0">{{ analise.status_matematico }}</h5>
+            <p class="small mb-0 opacity-75">Cálculo de gradiente térmico em tempo real.</p>
+        </div>
+    </div>
+    
+    <div class="alert bg-primary bg-opacity-10 border-0 mb-4">
+        <ul class="small mb-0">
+            {% for alerta in analise.alertas_matematicos %}
+                <li>{{ alerta }}</li>
+            {% empty %}
+                <li>Parâmetros físicos em conformidade.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <hr class="my-3 opacity-25">
+
+    <div class="d-flex align-items-center mb-3">
+        <div class="flex-shrink-0">
+            <i class="bi bi-robot fs-2 text-info"></i>
+        </div>
+        <div class="flex-grow-1 ms-3">
+            <h5 class="fw-bold mb-0">Análise de IA</h5>
+            <p class="small mb-0 opacity-75">Predição baseada em 10.000 registros históricos.</p>
+        </div>
+    </div>
+
+    <div class="alert {% if analise.ia_risco_porcentagem > 50 %}bg-danger{% else %}bg-info{% endif %} bg-opacity-10 border-0">
+        <h6 class="fw-bold mb-1">
+            <i class="bi bi-chat-dots-fill"></i> Comentário da IA:
+        </h6>
+        <p class="mb-0 italic">"{{ analise.ia_mensagem }}"</p>
+    </div>
+</div>
             </div>
             <div class="card p-4 mt-4 shadow-sm">
     <h6 class="metric-label mb-4 text-primary">Análise Comparativa de Estresse (ΔT)</h6>
@@ -147,14 +166,13 @@
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         try {
-            // Passamos como string e corrigimos a vírgula via JS
             const dadosGrafico = {
                 atual: parseFloat("{{ grafico_dados.atual|safe }}".replace(',', '.')),
                 media_cat: parseFloat("{{ grafico_dados.media_cat|safe }}".replace(',', '.')),
                 media_falha: parseFloat("{{ grafico_dados.media_falha|safe }}".replace(',', '.'))
             };
 
-            console.log("Dados Processados:", dadosGrafico); // Para você conferir no F12
+            console.log("Dados Processados:", dadosGrafico); 
 
             if (typeof initGraficoComparativo === "function") {
                 initGraficoComparativo(dadosGrafico);
