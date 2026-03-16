@@ -84,7 +84,7 @@
             <div class="col-md-3">
                 <div class="card p-3 border-good">
                     <div class="metric-label">Torque / Rotação</div>
-                    <h3 class="fw-bold">{{ registro.torque_nm }}<small class="fs-6 fw-light">Nm</small> | {{ registro.rotacao_rpm|floatformat:0 }}<small class="fs-6 fw-light">RPM</small></h3>
+                    <h3 class="fw-bold mb-0">{{ registro.torque_nm|floatformat:2 }}<small class="fs-6 fw-light">Nm</small> | {{ registro.rotacao_rpm|floatformat:0 }}<small class="fs-6 fw-light">RPM</small></h3>
                 </div>
             </div>
             <div class="col-md-3">
@@ -153,7 +153,7 @@
 </div>
             </div>
             <div class="card p-4 mt-4 shadow-sm">
-    <h6 class="metric-label mb-4 text-primary">Análise Comparativa de Estresse (ΔT)</h6>
+    <h6 class="metric-label mb-4 fw-bolder">Análise Comparativa de Estresse (ΔT)</h6>
     <div style="height: 300px;">
         <canvas id="canvasGraficoComparativo"></canvas>
     </div>
@@ -170,7 +170,6 @@
     <script>
 document.addEventListener('DOMContentLoaded', function() {
     try {
-        // Usamos aspas e replace para garantir que 10,5 vire 10.5
         const atualRaw = "{{ grafico_dados.atual|safe }}".replace(',', '.');
         const mediaCatRaw = "{{ grafico_dados.media_cat|safe }}".replace(',', '.');
         const mediaFalhaRaw = "{{ grafico_dados.media_falha|safe }}".replace(',', '.');
