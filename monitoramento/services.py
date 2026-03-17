@@ -56,6 +56,10 @@ def processar_manutencao_preditiva(dados_sensor):
             "mensagem": f"Serviço de IA Indisponível: {str(e)}"
         }
 
+    risco_atual = resultado_ia.get('risco', 0.0)
+    
+    explicacao_detalhada = gerar_diagnostico_ia(dados_sensor, risco_atual)
+
     return {
         "potencia_kw": potencia_kw,
         "delta_temp": delta_t,
@@ -65,8 +69,28 @@ def processar_manutencao_preditiva(dados_sensor):
         "alertas_matematicos": alertas_detalhados,
         
         "ia_falha_prevista": resultado_ia.get('falha_prevista'),
-        "ia_risco_porcentagem": resultado_ia.get('risco'),
+        "ia_risco_porcentagem": risco_atual,
         "ia_mensagem": resultado_ia.get('mensagem'),
+        "ia_mensagem_explicativa": explicacao_detalhada,
         
         "critico": (status_matematico != "Operação Normal") or resultado_ia.get('falha_prevista', False)
     }
+    
+def gerar_diagnostico_ia(dados, risco):
+    if risco < 30:
+        return "Ativo operando dentro dos padrões nominais de estabilidade termodinâmica."
+    
+    causas = []
+    if dados.get('temp_processo_k', 0) - dados.get('temp_ar_k', 0) > 12:
+        causas.append("Gradiente térmico elevado (ΔT)")
+    
+    if dados.get('torque_nm', 0) > 50 and dados.get('rotacao_rpm', 9999) < 1400:
+        causas.append("Esforço mecânico excessivo (Alto Torque / Baixa Rotação)")
+        
+    if dados.get('desgaste_ferramenta_min', 0) > 180:
+        causas.append("Desgaste crítico da ferramenta")
+        
+    if not causas:
+        return "Anomalia sistêmica detectada pela combinação atípica de sensores."
+        
+    return f"Fatores de risco: {', '.join(causas)}."

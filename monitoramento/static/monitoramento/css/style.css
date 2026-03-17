@@ -1,35 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
 :root {
-    --bg-light: #e4e3e3;
+    --bg-light: #c7cbd1;
     --bg-dark: #0f172a;
-    --card-light: #ffffff;
+    
+    --card-light: #dadada;
     --card-dark: #1e293b;
     --text-light: #1e293b;
     --text-dark: #f1f5f9;
-    
-    --status-stable: #0ea5e9;
+
+    --status-stable: #0ea5e9;    
     --status-good: #22c55e;
     --status-warning: #eab308;
     --status-danger: #ef4444;
 }
 
-body { 
-    background-color: var(--bg-light); 
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    background-color: var(--bg-light) !important;
     color: var(--text-light);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     transition: background-color 0.3s ease, color 0.3s ease;
     min-height: 100vh;
 }
 
-[data-bs-theme="dark"] body { 
-    background-color: var(--bg-dark); 
+[data-bs-theme="dark"] body {
+    background-color: var(--bg-dark) !important;
     color: var(--text-dark);
 }
 
 .card {
-    background-color: var(--card-light);
-    border: 1px solid rgba(0,0,0,0.05);
     border-radius: 12px;
-    transition: transform 0.2s;
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
 }
 
 [data-bs-theme="dark"] .card {
@@ -43,10 +45,10 @@ body {
 .border-danger { border-left: 6px solid var(--status-danger) !important; }
 
 .metric-label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
     text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    font-weight: 600;
     opacity: 0.7;
 }
 
@@ -64,6 +66,7 @@ body {
     display: flex;
     align-items: center; 
     justify-content: center;
+    border-radius: 0 12px 12px 0 !important;
 }
 
 .form-control:focus {
@@ -81,9 +84,20 @@ body {
 .form-control {
     background-color: var(--card-light);
     color: var(--text-light);
+    transition: all 0.3s ease;
 }
 
 [data-bs-theme="dark"] .form-control {
     background-color: var(--card-dark);
     color: var(--text-dark);
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 250px;
+}
+
+#canvasGraficoTendencia {
+    margin-top: 1rem;
 }

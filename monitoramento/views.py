@@ -6,12 +6,14 @@ from .utils import gerar_leitura_sensor
 
 def monitoramento(request):
     todos_ids = AtivoEletrico.objects.values_list('product_id', flat=True).distinct()
+    
     id_buscado = request.GET.get('filtro_id', 'M14860').strip()
     
     if id_buscado == "GERAR_DADO":
         dados_brutos = gerar_leitura_sensor(tipo=None, condicao=None)
+        
         registro = AtivoEletrico(
-            product_id="SIMULADO_01",
+            product_id=f"SIMULADO_{id_buscado}",
             tipo=dados_brutos['tipo'],
             temp_ar_k=dados_brutos['temp_ar_k'],
             temp_processo_k=dados_brutos['temp_processo_k'],
@@ -35,7 +37,7 @@ def monitoramento(request):
     }
     analise = processar_manutencao_preditiva(dados_sensor)
 
-    if not is_simulado and registro:
+    if not is_simulado and registro.id:
         registro.status_matematico = analise['status_matematico']
         registro.predicao_ia_risco = analise['ia_risco_porcentagem']
         registro.save()
@@ -44,13 +46,16 @@ def monitoramento(request):
         request.session['historico_simulacao'] = []
 
     if id_buscado == "GERAR_DADO":
-        novo_ponto = {
-            'delta_t': float(analise.get('delta_temp', 0)),
-            'risco': float(analise.get('ia_risco_porcentagem', 0))
-        }
         historico = request.session['historico_simulacao']
+        novo_ponto = {
+            'risco': float(analise.get('ia_risco_porcentagem', 0)),
+            'delta_t': float(analise.get('delta_temp', 0))
+        }
         historico.append(novo_ponto)
-        if len(historico) > 10: historico.pop(0)
+        
+        if len(historico) > 10:
+            historico.pop(0)
+            
         request.session['historico_simulacao'] = historico
         request.session.modified = True
 

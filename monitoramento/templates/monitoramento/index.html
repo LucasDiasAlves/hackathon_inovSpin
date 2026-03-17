@@ -9,192 +9,101 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
 </head>
-<body>
+<body class="min-vh-100">
 
     <nav class="navbar border-bottom py-3">
         <div class="container">
             <span class="navbar-brand fw-bold">INOVASPIN <span class="fw-light">| INFRAESTRUTURA</span></span>
-            <button class="btn btn-link text-decoration-none" onclick="toggleTheme()">
+            <button class="btn btn-outline-secondary border-0" onclick="toggleTheme()">
                 <i class="bi bi-brightness-high-fill" id="theme-icon"></i>
             </button>
         </div>
     </nav>
 
-    <div class="container py-4">
-        <div class="row align-items-center mb-5">
+    <main class="container py-4">
+        <div class="row align-items-center mb-4">
             <div class="col-md-7">
-                <h6 class="metric-label mb-2">Identificação do Ativo</h6>
-                <div class="mb-4 search">
-                    <form method="GET" action="" class="input-group input-group-lg shadow-sm"> 
-                        <input type="text" 
-                            name="filtro_id" 
-                            id="inputAtivo"
-                            list="lista-ativos" 
-                            value="{{ registro.product_id }}" 
-                            placeholder="ID do Ativo..." 
-                            class="form-control shadow-none border-0"> <datalist id="lista-ativos">
-                            {% for id in todos_ids %}
-                            <option value="{{ id }}">
-                            {% endfor %}
-                        </datalist>
-
-                        <button class="btn btn-success px-4 border-0" 
-                                type="submit" 
-                                style="background-color: #198754; width: 80px;">
-                            <i class="bi bi-search fs-4"></i>    
-                        </button>
-                    </form>
-
-                </div>
-                <h1 class="display-5 fw-bold mb-0">{{ registro.product_id }}</h1>
-                <p class="mb-0 opacity-75">Tipo: {{ registro.get_tipo_display }}</p>
+                <h6 class="metric-label mb-2">Busca de Ativo</h6>
+                <form method="GET" class="input-group input-group-lg shadow-sm mb-3"> 
+                    <input type="text" name="filtro_id" id="inputAtivo" list="lista-ativos" value="{{ registro.product_id }}" class="form-control border-0">
+                    <datalist id="lista-ativos">{% for id in todos_ids %}<option value="{{ id }}">{% endfor %}</datalist>
+                    <button class="btn btn-success" type="submit"><i class="bi bi-search"></i></button>
+                </form>
+                <h1 class="display-6 fw-bold mb-0">{{ registro.product_id }}</h1>
+                <p class="opacity-75">Tipo: {{ registro.get_tipo_display }}</p>
             </div>
-            <div class="col-md-5 text-md-end mt-3 mt-md-0">
-                <h6 class="metric-label mb-2">Condição Atual</h6>
-                {% if alerta_amarelo %}
-                    <div class="badge bg-warning text-dark p-3 fs-5 rounded-pill">
-                        <i class="bi bi-exclamation-triangle"></i> VERIFICAÇÃO RECOMENDADA
-                    </div>
-                {% elif analise.critico %}
-                    <div class="badge bg-danger p-3 fs-5 rounded-pill">
-                        <i class="bi bi-shield-exclamation"></i> MANUTENÇÃO IMEDIATA
-                    </div>
+            <div class="col-md-5 text-md-end">
+                <h6 class="metric-label mb-2">Status Operacional</h6>
+                {% if analise.critico %}
+                    <span class="badge bg-danger p-3 fs-6 rounded-pill">MANUTENÇÃO IMEDIATA</span>
                 {% else %}
-                    <div class="badge bg-info p-3 fs-5 rounded-pill">
-                        <i class="bi bi-shield-check"></i> OPERAÇÃO ESTÁVEL
-                    </div>
+                    <span class="badge bg-info p-3 fs-6 rounded-pill">OPERAÇÃO ESTÁVEL</span>
                 {% endif %}
-                <p class="small mt-2 opacity-50">Última Leitura: {{ registro.data_leitura|date:"d/m/Y H:i" }}</p>
             </div>
+        </div>
+
+        <div class="row g-3 mb-4 text-center">
+            <div class="col-6 col-md-3"><div class="card p-3 border-stable"><div class="small opacity-75">Ambiente</div><div class="h4 mb-0">{{ analise.temp_ar_c }}°C</div></div></div>
+            <div class="col-6 col-md-3"><div class="card p-3 border-warning"><div class="small opacity-75">Processo</div><div class="h4 mb-0">{{ analise.temp_proc_c }}°C</div></div></div>
+            <div class="col-6 col-md-3"><div class="card p-3 border-good"><div class="small opacity-75">Torque</div><div class="h4 mb-0">{{ registro.torque_nm|floatformat:2 }}Nm</div></div></div>
+            <div class="col-6 col-md-3"><div class="card p-3 border-danger"><div class="small opacity-75">Delta T</div><div class="h4 mb-0">{{ analise.delta_temp }}K</div></div></div>
         </div>
 
         <div class="row g-4">
-            <div class="col-md-3">
-                <div class="card p-3 border-stable">
-                    <div class="metric-label">Temp. Ambiente</div>
-                    <h3 class="fw-bold">{{ analise.temp_ar_c }}°C</h3>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card p-3 border-warning">
-                    <div class="metric-label">Temp. Processo</div>
-                    <h3 class="fw-bold">{{ analise.temp_proc_c }}°C</h3>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card p-3 border-good">
-                    <div class="metric-label">Torque / Rotação</div>
-                    <h3 class="fw-bold mb-0">{{ registro.torque_nm|floatformat:2 }}<small class="fs-6 fw-light">Nm</small> | {{ registro.rotacao_rpm|floatformat:0 }}<small class="fs-6 fw-light">RPM</small></h3>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card p-3 border-danger">
-                    <div class="metric-label">Diferencial Térmico (ΔT)</div>
-                    <h3 class="fw-bold">{{ analise.delta_temp }} K</h3>
-                </div>
-            </div>
-
-            <div class="col-md-4">
+            <div class="col-lg-4">
                 <div class="card p-4 h-100 text-center">
-                    <h6 class="metric-label mb-4">Análise Preditiva (IA)</h6>
-                    <div class="gauge-container">
-                        <canvas id="gaugeRisco"></canvas>
+                    <h6 class="metric-label mb-3">Risco IA</h6>
+                    <div style="height: 150px; position: relative;">
+                        <canvas id="gaugeRisco" data-risco="{{ analise.ia_risco_porcentagem|safe }}"></canvas>
                         <div class="position-absolute top-50 start-50 translate-middle mt-2">
-                            <h2 class="fw-bold mb-0">{{ analise.ia_risco_porcentagem }}%</h2>
-                            <small class="opacity-50">RISCO</small>
+                            <h3 class="mb-0">{{ analise.ia_risco_porcentagem }}%</h3>
                         </div>
                     </div>
-                    <p class="mt-4 fw-semibold">{{ analise.ia_mensagem }}</p>
+                    <p class="small mt-3 mb-0">{{ analise.ia_mensagem }}</p>
                 </div>
             </div>
-
-            <div class="col-md-8">
-                <div class="card p-4 h-100 shadow-sm border-0">
-    <h6 class="metric-label mb-4 text-primary">Diagnóstico Híbrido (Física + IA)</h6>
-    
-    <div class="d-flex align-items-center mb-3">
-        <div class="flex-shrink-0">
-            <i class="bi bi-cpu fs-2 text-primary"></i>
-        </div>
-        <div class="flex-grow-1 ms-3">
-            <h5 class="fw-bold mb-0">{{ analise.status_matematico }}</h5>
-            <p class="small mb-0 opacity-75">Cálculo de gradiente térmico em tempo real.</p>
-        </div>
-    </div>
-    
-    <div class="alert bg-primary bg-opacity-10 border-0 mb-4">
-        <ul class="small mb-0">
-            {% for alerta in analise.alertas_matematicos %}
-                <li>{{ alerta }}</li>
-            {% empty %}
-                <li>Parâmetros físicos em conformidade.</li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <hr class="my-3 opacity-25">
-
-    <div class="d-flex align-items-center mb-3">
-        <div class="flex-shrink-0">
-            <i class="bi bi-robot fs-2 text-info"></i>
-        </div>
-        <div class="flex-grow-1 ms-3">
-            <h5 class="fw-bold mb-0">Análise de IA</h5>
-            <p class="small mb-0 opacity-75">Predição baseada em 10.000 registros históricos.</p>
-        </div>
-    </div>
-
-    <div class="alert {% if analise.ia_risco_porcentagem > 50 %}bg-danger{% else %}bg-info{% endif %} bg-opacity-10 border-0">
-        <h6 class="fw-bold mb-1">
-            <i class="bi bi-chat-dots-fill"></i> Comentário da IA:
-        </h6>
-        <p class="mb-0 italic">"{{ analise.ia_mensagem }}"</p>
-    </div>
-</div>
+            <div class="col-lg-8">
+                <div class="card p-4 h-100">
+                    <h6 class="metric-label mb-3">Diagnóstico Híbrido</h6>
+                    <div class="alert bg-primary bg-opacity-10 border-0 small">
+                        <strong>Física:</strong> {{ analise.status_matematico }}
+                    </div>
+                    <div class="alert bg-info bg-opacity-10 border-0 small">
+                        <strong>Comentário IA:</strong> {{ analise.ia_mensagem }}
+                    </div>
+                    <div class="alert bg-info bg-opacity-10 border-0">
+                        <h6 class="fw-bold"><i class="bi bi-chat-left-dots"></i> Diagnóstico Detalhado:</h6>
+                        <p class="mb-0 italic">"{{ analise.ia_mensagem_explicativa }}"</p>
+                    </div>
+                </div>
             </div>
-            <div class="card p-4 mt-4 shadow-sm">
-    <h6 class="metric-label mb-4 fw-bolder">Análise Comparativa de Estresse (ΔT)</h6>
-    <div style="height: 300px;">
-        <canvas id="canvasGraficoComparativo"></canvas>
-    </div>
-    <p class="small opacity-75 mt-3">
-        <i class="bi bi-info-circle"></i> 
-        Este gráfico compara o diferencial térmico atual com o comportamento histórico da categoria <strong>{{ registro.get_tipo_display }}</strong>.
-    </p>
-</div>
         </div>
-    </div>
-    
+
+        <div class="row g-4 mt-2">
+            <div class="col-md-6">
+                <div class="card p-4 h-100">
+                    <h6 class="metric-label mb-3">Comparativo (ΔT)</h6>
+                    <div style="height: 250px;">
+                        <canvas id="canvasGraficoComparativo" 
+                                data-atual="{{ grafico_dados.atual|safe }}" 
+                                data-media="{{ grafico_dados.media_cat|safe }}" 
+                                data-falha="{{ grafico_dados.media_falha|safe }}"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card p-4 h-100">
+                    <h6 class="metric-label mb-3">Tendência de Risco</h6>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="canvasGraficoTendencia"></canvas>
+                    </div>
+                    {{ historico|json_script:"dados-historico" }}
+                </div>
+            </div>
+        </div>
+    </main>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{% static 'monitoramento/js/script.js' %}"></script>
-    <script>
-document.addEventListener('DOMContentLoaded', function() {
-    try {
-        const atualRaw = "{{ grafico_dados.atual|safe }}".replace(',', '.');
-        const mediaCatRaw = "{{ grafico_dados.media_cat|safe }}".replace(',', '.');
-        const mediaFalhaRaw = "{{ grafico_dados.media_falha|safe }}".replace(',', '.');
-
-        const dadosGrafico = {
-            atual: parseFloat(atualRaw) || 0,
-            media_cat: parseFloat(mediaCatRaw) || 0,
-            media_falha: parseFloat(mediaFalhaRaw) || 0
-        };
-
-        console.log("Monitoramento InovaSpin - Dados do Gráfico:", dadosGrafico);
-
-        if (typeof initGraficoComparativo === "function") {
-            initGraficoComparativo(dadosGrafico);
-        }
-    } catch (e) {
-        console.error("Erro Crítico no Gráfico:", e);
-    }
-});
-</script>
-    <script>
-        const valorRisco = "{{ analise.ia_risco_porcentagem|safe }}".replace(',', '.');
-        initDashboard(valorRisco);
-    </script>
-
-    
 </body>
 </html>
