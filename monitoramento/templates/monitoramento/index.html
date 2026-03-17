@@ -33,7 +33,7 @@
                 <p class="opacity-75">Tipo: {{ registro.get_tipo_display }}</p>
             </div>
             <div class="col-md-5 text-md-end">
-                <h6 class="metric-label mb-2">Status Operacional</h6>
+                <h6 class="metric-label mb-2">Status Operacional (ΔT)</h6>
                 {% if analise.critico %}
                     <span class="badge bg-danger p-3 fs-6 rounded-pill">MANUTENÇÃO IMEDIATA</span>
                 {% else %}
@@ -52,7 +52,7 @@
         <div class="row g-4">
             <div class="col-lg-4">
                 <div class="card p-4 h-100 text-center">
-                    <h6 class="metric-label mb-3">Risco IA</h6>
+                    <h6 class="metric-label mb-3">Risco - Análise IA</h6>
                     <div style="height: 150px; position: relative;">
                         <canvas id="gaugeRisco" data-risco="{{ analise.ia_risco_porcentagem|safe }}"></canvas>
                         <div class="position-absolute top-50 start-50 translate-middle mt-2">
