@@ -8,6 +8,7 @@
 5. [🏛️ Arquitetura da Aplicação](#arquitetura-da-aplicação)
 6. [📊 Principais Funcionalidades](#principais-funcionalidades)
 7. [🎲 Origem Dataset](#origem-dataset)
+8. [📠 Como Executar o Projeto](#como-executar-o-projeto)
 ---
 
 ## Metodos para a Avaliação
@@ -19,7 +20,7 @@
 - É permitido utilziar modelos de IA como apoio técnico.
 
 ### Submissão do Projeto
-Os participantes deverão enviar até as 23h59 do dia 06 de março de 2026 os seguintes materiais para o e-mail: tulio.silva@spinengenharia.com.br. Use como titulo: [SPIN INOVAÇÃO HACK] Titulo do projeto.
+Os participantes deverão enviar até as 23h59 do dia 08 de março de 2026 os seguintes materiais para o e-mail: tulio.silva@spinengenharia.com.br. Use como titulo: [SPIN INOVAÇÃO HACK] Titulo do projeto.
 
 #### Itens Obrigatórios para Envio
 1. **Link do GitHub do Projeto**, contendo:
@@ -107,6 +108,9 @@ Um microserviço especializado em processamento de dados históricos
     - Projetado para suportar 2 tipos de processamento, **1° - Machine Learning**, treinado com modelo de treinamento supervisionado. **2° - cálculo de Gradiente Térmico $\Delta T$**, permitindo assim os responsaveis estabelerecerem um limite a qual é seguro operar.
 - **Integração via Microserviços:**
     - A View do Django atua como orquestradora, realizando chamadas via protocolo HTTP para o microserviço FastAPI. Esta arquitetura permite que o processamento pesado de Machine Learning seja isolado da lógica de negócio principal.
+- **Simulador de Estresse e Gráfico de Tendência:**
+    - Como o dataset base (AI4I 2020) é estático (apenas 1 registro por máquina), desenvolvemos um gerador de dados sintéticos, assim evitando **overfitting**. Ao pesquisar pelo ID ``GERAR_DADO``, o sistema cria novas leituras simulando a passagem do tempo.
+    - O Gráfico de Tendência entra em ação exclusivamente para capturar essas simulações, provando visualmente que a IA consegue identificar a curva de degradação ao longo do tempo (ex: L1, L2, L3...), e não apenas "decorar" o banco de dados de treino.
 
 ## Origem Dataset
 1.  **Dataset:**  
@@ -145,8 +149,16 @@ python manage.py migrate
 python manage.py runserver
 ```
     Acesse em seu navegador: http://127.0.0.1:8000/
+
+### 4.Como testar o Simulador de Tendência da IA:
+1. Com o sistema rodando, acesse http://127.0.0.1:8000/.
+
+2. Na barra de "Busca de Ativo", digite exatamente ``GERAR_DADO`` e aperte Enter.
+
+3. Repita a busca várias vezes. Isso fará com que o sistema gere dados inéditos e alimente o Gráfico de Tendência de Risco, simulando o desgaste temporal de uma máquina virtual.
+
 ---
 #### Desenvolvido por: 
 *Lucas Dias*
 [linkedin](www.linkedin.com/in/lucas-dias-alves-52166a320)
-**🗓️ Prazo:** Inicio: 27/02 **|** Entrega: 06/03. **uma semana!**
+**🗓️ Prazo:** Inicio: 27/02 **|** Entrega: 17/03.
